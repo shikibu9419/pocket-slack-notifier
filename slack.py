@@ -1,34 +1,32 @@
 # -*- coding: utf-8 -*-
-
-import json
 import os
 import requests
 
 WEBHOOK_URL = os.environ.get('SLACK_WEBHOOK_URL')
 
-def post_to_slack(payload={}):
+
+def __post_to_slack(payload={}) -> str:
     headers = {
         'Content-Type': 'application/json',
     }
 
-    print(requests.post(WEBHOOK_URL, json=payload, headers=headers).text)
+    return requests.post(WEBHOOK_URL, json=payload, headers=headers).text
 
 
-def notify(tag, pick_up_type, posts):
+def notify(tag, pick_up_type, posts) -> str:
     payload = {
         'blocks': [
             {
                 'type': 'section',
                 'text': {
                     'type': 'mrkdwn',
-                    'text': f'この記事を読むのじゃ...\nタグ: *{tag}*\nピックアップ方法: *{pick_up_type}*'
+                    'text': f'この記事を読むのです...\nタグ: *{tag}*\nピックアップ方法: *{pick_up_type}*'
                 }
             },
             {
                 'type': 'divider'
             }
-        ],
-        'unfurl_links': 'true'
+        ]
     }
 
     for post in posts:
@@ -56,12 +54,11 @@ def notify(tag, pick_up_type, posts):
                             'type': 'plain_text',
                             'text': '読んだ'
                         },
-                        'value': 'click_me_123',
-                        'url': 'https://google.com'
+                        'value': post['item_id']
                     }
                 ]
             }
         )
         payload['blocks'].append({'type': 'divider'})
 
-    post_to_slack(payload)
+    return __post_to_slack(payload)
