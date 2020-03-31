@@ -44,21 +44,5 @@ def notify(tag, pick_up_type, posts) -> str:
                 }
             }
         )
-        payload['blocks'].append(
-            {
-                'type': 'actions',
-                'elements': [
-                    {
-                        'type': 'button',
-                        'text': {
-                            'type': 'plain_text',
-                            'text': '読んだ'
-                        },
-                        'value': post['item_id']
-                    }
-                ]
-            }
-        )
-        payload['blocks'].append({'type': 'divider'})
 
     return __post_to_slack(payload)
